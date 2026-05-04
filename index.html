@@ -4,32 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI開発ポートフォリオ | Claude Code 実績集</title>
-<meta name="description" content="Claude Codeを使って実現したAI開発タスクの実績集。中級・上級レベルの実践事例をスクリーンショットで公開。">
-<meta name="keywords" content="Claude Code, AI開発, ポートフォリオ, 自動化, エージェント">
+<meta name="description" content="Claude Codeを使ったAI開発タスクの実績集。Builder/Reviewerパターン、タスク分解、ブラウザ自動化など実践事例をスクリーンショットで公開。">
 <meta property="og:title" content="AI開発ポートフォリオ | Claude Code 実績集">
-<meta property="og:description" content="Claude Codeを使って実現したAI開発タスクの実績集。">
+<meta property="og:description" content="Claude Codeを使ったAI開発タスクの実績集。Builder/Reviewerパターン、タスク分解、ブラウザ自動化など実践事例を公開。">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#e03010">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   /* ── GRADIENT BACKGROUND ── */
-  :root {
-    --grad: radial-gradient(ellipse 100% 70% at 0% 0%, #b0b8d8 0%, transparent 55%),
-            radial-gradient(ellipse 80%  60% at 55% 0%,  #e8c0d0 0%, transparent 50%),
-            radial-gradient(ellipse 90%  70% at 50% 45%, #f0a0b0 0%, transparent 55%),
-            radial-gradient(ellipse 80%  60% at 50% 85%, #f06020 0%, transparent 50%),
-            #e03010;
-  }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--grad);
+    background:
+      radial-gradient(ellipse 100% 70% at 0% 0%,   #b0b8d8 0%, transparent 55%),
+      radial-gradient(ellipse 80%  60% at 55% 0%,  #e8c0d0 0%, transparent 50%),
+      radial-gradient(ellipse 90%  70% at 50% 45%, #f0a0b0 0%, transparent 55%),
+      radial-gradient(ellipse 80%  60% at 50% 85%, #f06020 0%, transparent 50%),
+      #e03010;
     background-size: 220% 220%;
     animation: breathing 12s ease-in-out infinite;
-    font-family: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-family: system-ui, -apple-system, 'Segoe UI', 'Inter', sans-serif;
   }
 
-  /* ── ANIMATIONS ── */
+  /* ── KEYFRAMES ── */
   @keyframes breathing {
     0%,100% { background-position: 0%   50%; }
     50%      { background-position: 100% 50%; }
@@ -40,83 +37,33 @@
   }
   @keyframes scrollBounce {
     0%,100% { transform:translateY(0);   opacity:1; }
-    50%      { transform:translateY(6px); opacity:.5; }
-  }
-  @keyframes countUp {
-    from { opacity:0; transform:translateY(8px); }
-    to   { opacity:1; transform:translateY(0); }
+    50%      { transform:translateY(6px); opacity:.45; }
   }
 
-  /* ── UTILITIES ── */
-  .glass-dark {
+  /* ── GLASS SURFACE ── */
+  .glass {
     background: rgba(30,30,34,.88);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
   }
-  .glass-dark-sm {
+  .glass-sm {
     background: rgba(30,30,34,.75);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
 
-  /* ── NAV SCROLL STATE ── */
+  /* ── NAV ── */
   #nav { transition: background .3s, box-shadow .3s; }
   #nav.scrolled {
     background: rgba(30,30,34,.90);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 2px 24px rgba(0,0,0,.25);
+    box-shadow: 0 2px 24px rgba(0,0,0,.28);
   }
-  #nav.scrolled a, #nav.scrolled span { color: #c8c8cc !important; }
+  #nav.scrolled .nav-link,
+  #nav.scrolled .logo-text { color: #c8c8cc !important; }
+  #nav.scrolled .nav-link:hover { opacity:.7; }
   #nav.scrolled .logo-text { color: #fff !important; }
-
-  /* ── CARD ANIMATION ── */
-  .card-enter {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity .55s ease, transform .55s ease;
-  }
-  .card-enter.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── SCROLL INDICATOR ── */
-  .scroll-dot { animation: scrollBounce 1.8s ease-in-out infinite; }
-
-  /* ── CARD HOVER IMAGE ── */
-  .card-img-wrap { overflow:hidden; }
-  .card-img-wrap img { transition: transform .4s ease; }
-  .portfolio-card:hover .card-img-wrap img { transform:scale(1.05); }
-  .portfolio-card {
-    transition: transform .25s, box-shadow .25s;
-    box-shadow: 0 8px 32px rgba(0,0,0,.28);
-  }
-  .portfolio-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 0 24px rgba(255,255,255,.09), 0 18px 44px rgba(0,0,0,.36);
-  }
-
-  /* ── FILTER ACTIVE ── */
-  .filter-btn {
-    transition: background .2s, color .2s, box-shadow .2s;
-    background: rgba(30,30,34,.78);
-    color: #808088;
-    backdrop-filter: blur(12px);
-  }
-  .filter-btn:hover { background: rgba(30,30,34,.95); color: #c8c8cc; }
-  .filter-btn.active {
-    background: #fff !important;
-    color: #1e1e22 !important;
-    box-shadow: 0 0 18px rgba(255,255,255,.32);
-  }
-
-  /* ── LIGHTBOX ── */
-  #lightbox { transition: opacity .2s; }
-  #lightbox.hidden { opacity:0; pointer-events:none; }
-
-  /* ── STATS COUNT ── */
-  .stat-num { animation: countUp .6s ease both; }
 
   /* ── MOBILE MENU ── */
   #mobile-menu {
@@ -128,17 +75,93 @@
     pointer-events: none;
   }
 
-  /* ── ABOUT GRID ── */
-  .about-card { transition: transform .2s, box-shadow .2s; }
-  .about-card:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.35); }
+  /* ── HERO SCROLL DOT ── */
+  .scroll-dot { animation: scrollBounce 1.8s ease-in-out infinite; }
+
+  /* ── STATS BAR ── */
+  .stats-divider { border-left: 1px solid #3a3a40; }
+
+  /* ── FILTER PILLS ── */
+  .filter-btn {
+    transition: all 0.2s;
+    background: rgba(30,30,34,.78);
+    color: #808088;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+  .filter-btn:hover { background: rgba(30,30,34,.95); color: #c8c8cc; }
+  .filter-btn.active {
+    background: #fff !important;
+    color: #1e1e22 !important;
+    box-shadow: 0 0 18px rgba(255,255,255,.32);
+  }
+
+  /* ── PORTFOLIO CARD ── */
+  .portfolio-card {
+    background: rgba(30,30,34,.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.30);
+    cursor: pointer;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .portfolio-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 24px rgba(255,255,255,.09), 0 18px 44px rgba(0,0,0,.36);
+  }
+  .portfolio-card:focus-visible {
+    outline: 2px solid rgba(255,255,255,.7);
+    outline-offset: 3px;
+  }
+  .card-img-wrap { aspect-ratio: 16/9; overflow: hidden; background: #111; }
+  .card-img-wrap img { transition: transform .4s ease; }
+  .portfolio-card:hover .card-img-wrap img { transform: scale(1.05); }
+
+  /* ── CARD SCROLL ANIMATION ── */
+  .card-enter {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .card-enter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── ABOUT CARDS ── */
+  .about-card {
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 8px 32px rgba(0,0,0,.28);
+  }
+  .about-card:hover { transform: translateY(-3px); box-shadow: 0 16px 44px rgba(0,0,0,.36); }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    transition: opacity .2s;
+  }
+  #lightbox.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: flex !important;
+  }
+  #lightbox:not(.hidden) {
+    opacity: 1;
+  }
 
   /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width:6px; }
-  ::-webkit-scrollbar-track { background:transparent; }
-  ::-webkit-scrollbar-thumb { background:rgba(30,30,34,.6); border-radius:3px; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(30,30,34,.55); border-radius: 3px; }
 </style>
 </head>
-<body class="min-h-screen text-gray-900 antialiased">
+<body class="min-h-screen antialiased">
 
 <!-- ═══════════════════════════════════════
      NAVIGATION
@@ -147,138 +170,150 @@
   <nav class="flex items-center justify-between px-6 py-4 lg:px-10">
 
     <!-- Logo -->
-    <a href="#" class="logo-text text-xs font-bold tracking-[.2em] uppercase text-gray-900 hover:opacity-70 transition-opacity">
-      CC Portfolio
+    <a href="#" class="logo-text text-xs font-bold tracking-widest uppercase small-caps text-gray-900 hover:opacity-70 transition-opacity">
+      CC&nbsp;Portfolio
     </a>
 
     <!-- Desktop links -->
     <div class="hidden lg:flex items-center gap-8">
-      <a href="#portfolio" class="text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">実績</a>
-      <a href="#about"     class="text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">About</a>
-    </div>
-
-    <!-- Desktop CTA -->
-    <div class="hidden lg:flex items-center gap-4">
-      <a href="#portfolio" class="text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">
-        実績を見る <span aria-hidden="true">&rarr;</span>
+      <a href="#portfolio" class="nav-link text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">実績</a>
+      <a href="#about"     class="nav-link text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">About</a>
+      <a href="https://github.com/zxccozy/ai-dev-portfolio" target="_blank" rel="noopener noreferrer"
+         class="nav-link text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">
+        GitHub <span aria-hidden="true" class="text-[10px] align-top mt-0.5 inline-block">↗</span>
       </a>
     </div>
 
-    <!-- Mobile menu button -->
+    <!-- Mobile hamburger -->
     <button id="menu-toggle" aria-label="メニューを開く"
             class="lg:hidden -m-2 p-2 text-gray-900 rounded-md">
-      <svg id="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-6">
+      <svg id="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
         <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <svg id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-6 hidden">
+      <svg id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6 hidden">
         <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
   </nav>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden-menu fixed inset-y-0 right-0 z-50 w-72 p-6 bg-[#1e1e22] shadow-2xl lg:hidden">
+  <!-- Mobile slide-in panel -->
+  <div id="mobile-menu" class="hidden-menu fixed inset-y-0 right-0 z-[60] w-72 p-6 shadow-2xl lg:hidden"
+       style="background:#1e1e22;">
     <div class="flex items-center justify-between mb-8">
-      <span class="text-xs font-bold tracking-[.2em] uppercase text-white">CC Portfolio</span>
-      <button id="menu-close" aria-label="メニューを閉じる" class="p-2 text-[#808088] hover:text-white">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5">
+      <span class="text-xs font-bold tracking-widest uppercase text-white">CC Portfolio</span>
+      <button id="menu-close" aria-label="メニューを閉じる" class="p-2 rounded-md hover:bg-white/10 transition-colors"
+              style="color:#808088;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-5 h-5">
           <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </div>
     <nav class="space-y-1">
-      <a href="#portfolio" class="block rounded-lg px-3 py-3 text-base font-semibold text-[#c8c8cc] hover:bg-white/10 transition-colors">実績</a>
-      <a href="#about"     class="block rounded-lg px-3 py-3 text-base font-semibold text-[#c8c8cc] hover:bg-white/10 transition-colors">About</a>
+      <a href="#portfolio" class="block rounded-lg px-3 py-3 text-base font-semibold transition-colors hover:bg-white/10"
+         style="color:#c8c8cc;">実績</a>
+      <a href="#about"     class="block rounded-lg px-3 py-3 text-base font-semibold transition-colors hover:bg-white/10"
+         style="color:#c8c8cc;">About</a>
+      <a href="https://github.com/zxccozy/ai-dev-portfolio" target="_blank" rel="noopener noreferrer"
+         class="block rounded-lg px-3 py-3 text-base font-semibold transition-colors hover:bg-white/10"
+         style="color:#c8c8cc;">GitHub ↗</a>
     </nav>
-    <div class="mt-8 pt-6 border-t border-[#3a3a40]">
-      <a href="mailto:" class="block text-sm text-[#808088] hover:text-white transition-colors">お問い合わせ</a>
+    <div class="mt-8 pt-6" style="border-top:1px solid #3a3a40;">
+      <p class="text-xs" style="color:#505058;">AI開発実績集 — Claude Code</p>
     </div>
   </div>
-  <!-- Mobile menu backdrop -->
-  <div id="menu-backdrop" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm hidden lg:hidden"></div>
+  <!-- Backdrop -->
+  <div id="menu-backdrop" class="hidden fixed inset-0 z-[55] bg-black/50 backdrop-blur-sm lg:hidden"></div>
 </header>
 
 
 <!-- ═══════════════════════════════════════
      HERO
 ═══════════════════════════════════════ -->
-<section class="relative isolate min-h-screen flex flex-col items-center justify-center px-6 pt-20 pb-16 text-center">
+<section class="relative isolate min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-20 text-center overflow-hidden">
 
-  <!-- Blob top -->
-  <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 overflow-hidden blur-3xl sm:-top-80 pointer-events-none">
-    <div style="clip-path:polygon(74.1% 44.1%,100% 61.6%,97.5% 26.9%,85.5% 0.1%,80.7% 2%,72.5% 32.5%,60.2% 62.4%,52.4% 68.1%,47.5% 58.3%,45.2% 34.5%,27.5% 76.7%,0.1% 64.9%,17.9% 100%,27.6% 76.8%,76.1% 97.7%,74.1% 44.1%);
-         background:linear-gradient(135deg,#b0b8d8,#e8c0d0);opacity:.45;"
-         class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36rem] -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:w-[72rem]">
-    </div>
+  <!-- Blob top-left -->
+  <div aria-hidden="true"
+       class="absolute -top-56 -left-40 -z-10 w-[580px] h-[580px] opacity-40 blur-3xl pointer-events-none"
+       style="clip-path:polygon(74.1% 44.1%,100% 61.6%,97.5% 26.9%,85.5% 0.1%,80.7% 2%,72.5% 32.5%,60.2% 62.4%,52.4% 68.1%,47.5% 58.3%,45.2% 34.5%,27.5% 76.7%,0.1% 64.9%,17.9% 100%,27.6% 76.8%,76.1% 97.7%,74.1% 44.1%);
+         background:linear-gradient(135deg,#b0b8d8,#e8c0d0);">
+  </div>
+
+  <!-- Blob bottom-right -->
+  <div aria-hidden="true"
+       class="absolute -bottom-40 -right-40 -z-10 w-[520px] h-[520px] opacity-40 blur-3xl pointer-events-none"
+       style="clip-path:polygon(74.1% 44.1%,100% 61.6%,97.5% 26.9%,85.5% 0.1%,80.7% 2%,72.5% 32.5%,60.2% 62.4%,52.4% 68.1%,47.5% 58.3%,45.2% 34.5%,27.5% 76.7%,0.1% 64.9%,17.9% 100%,27.6% 76.8%,76.1% 97.7%,74.1% 44.1%);
+         background:linear-gradient(135deg,#f06020,#f0a0b0);">
   </div>
 
   <!-- Announcement pill -->
-  <div class="mb-8 sm:flex sm:justify-center">
-    <div class="relative rounded-full px-4 py-1.5 text-sm font-medium text-gray-800 ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all cursor-default"
-         style="background:rgba(30,30,34,.14);backdrop-filter:blur(10px);">
-      Claude v4.7 対応の実績を公開中
-      <a href="#portfolio" class="ml-2 font-semibold text-gray-900 hover:text-black">
-        <span class="absolute inset-0" aria-hidden="true"></span>実績を見る &rarr;
+  <div class="mb-8 flex justify-center">
+    <div class="relative flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium text-gray-800
+                ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all cursor-default select-none"
+         style="background:rgba(30,30,34,.12);backdrop-filter:blur(10px);">
+      <span class="inline-flex items-center justify-center w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      Claude v4.7対応実績を追加しました
+      <a href="#portfolio" class="ml-1 font-semibold text-gray-900 hover:underline underline-offset-2">
+        実績を見る &rarr;
       </a>
     </div>
   </div>
 
-  <!-- Headline -->
-  <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 text-balance leading-[1.1] mb-6">
+  <!-- H1 -->
+  <h1 class="font-extrabold tracking-tight text-gray-900 text-balance leading-[1.08] mb-6"
+      style="font-size:clamp(44px,6vw,72px);">
     AI開発の<em class="not-italic" style="color:#fff;text-shadow:0 2px 28px rgba(0,0,0,.20);">実績</em>を<br>
     スクリーンショットで
   </h1>
 
-  <!-- Sub copy -->
-  <p class="max-w-xl text-lg sm:text-xl font-medium text-gray-700/80 leading-relaxed mb-10">
-    Claude Codeを使って実現したAI開発タスクの記録。<br class="hidden sm:block">
-    中級・上級レベルの実践事例を公開中。
+  <!-- Subtext -->
+  <p class="max-w-xl text-lg sm:text-xl font-medium leading-relaxed mb-10"
+     style="color:rgba(20,20,30,.72);">
+    Claude Codeを使ったAI開発タスクの実績集。Builder/Reviewerパターン、タスク分解、ブラウザ自動化など実践事例を公開。
   </p>
 
   <!-- CTAs -->
   <div class="flex flex-wrap items-center justify-center gap-4">
     <a href="#portfolio"
-       class="rounded-lg px-5 py-2.5 text-sm font-semibold text-gray-900 bg-white shadow-sm hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-white transition-colors">
+       class="rounded-lg px-6 py-2.5 text-sm font-semibold text-gray-900 bg-white shadow-sm
+              hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-white transition-colors">
       実績を見る
     </a>
-    <a href="#about" class="text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">
-      詳細を見る <span aria-hidden="true">&rarr;</span>
+    <a href="https://github.com/zxccozy/ai-dev-portfolio" target="_blank" rel="noopener noreferrer"
+       class="text-sm font-semibold text-gray-900 hover:opacity-60 transition-opacity">
+      GitHub で見る &rarr;
     </a>
   </div>
 
   <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-50">
-    <span class="text-[10px] tracking-widest uppercase text-gray-900">Scroll</span>
-    <div class="scroll-dot w-1 h-1 rounded-full bg-gray-900"></div>
-  </div>
-
-  <!-- Blob bottom -->
-  <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 overflow-hidden blur-3xl sm:top-[calc(100%-30rem)] pointer-events-none">
-    <div style="clip-path:polygon(74.1% 44.1%,100% 61.6%,97.5% 26.9%,85.5% 0.1%,80.7% 2%,72.5% 32.5%,60.2% 62.4%,52.4% 68.1%,47.5% 58.3%,45.2% 34.5%,27.5% 76.7%,0.1% 64.9%,17.9% 100%,27.6% 76.8%,76.1% 97.7%,74.1% 44.1%);
-         background:linear-gradient(135deg,#f06020,#f0a0b0);opacity:.38;"
-         class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36rem] -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:w-[72rem]">
-    </div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+       style="opacity:.5;">
+    <span class="text-[9px] font-semibold tracking-[.22em] uppercase text-gray-900">Scroll</span>
+    <div class="scroll-dot w-1.5 h-1.5 rounded-full bg-gray-900"></div>
   </div>
 </section>
 
 
 <!-- ═══════════════════════════════════════
-     STATS
+     STATS BAR
 ═══════════════════════════════════════ -->
-<section class="px-6 mb-10">
-  <div class="glass-dark rounded-2xl max-w-lg mx-auto">
-    <dl class="flex divide-x divide-[#3a3a40]">
-      <div class="flex-1 text-center px-4 py-5">
-        <dt class="text-xs font-medium text-[#808088] mb-1">実績数</dt>
-        <dd class="stat-num text-3xl font-bold text-white tracking-tight" data-target="3">3</dd>
+<section class="px-6 mb-12" aria-label="統計">
+  <div class="glass rounded-2xl max-w-[680px] mx-auto">
+    <dl class="flex">
+      <div class="flex-1 text-center px-4 py-5 sm:px-6">
+        <dt class="text-[12px] font-medium mb-1" style="color:#808088;">実績数</dt>
+        <dd class="font-bold tracking-tight" style="font-size:28px;color:#fff;letter-spacing:-0.02em;">3</dd>
       </div>
-      <div class="flex-1 text-center px-4 py-5">
-        <dt class="text-xs font-medium text-[#808088] mb-1">難易度レベル</dt>
-        <dd class="stat-num text-3xl font-bold text-white tracking-tight" data-target="2">2</dd>
+      <div class="flex-1 text-center px-4 py-5 sm:px-6 stats-divider">
+        <dt class="text-[12px] font-medium mb-1" style="color:#808088;">Claudeバージョン</dt>
+        <dd class="font-bold tracking-tight" style="font-size:18px;color:#fff;letter-spacing:-0.02em;">v4.6 / 4.7</dd>
       </div>
-      <div class="flex-1 text-center px-4 py-5">
-        <dt class="text-xs font-medium text-[#808088] mb-1">対応バージョン</dt>
-        <dd class="stat-num text-xl font-bold text-white tracking-tight">v4.6〜4.7</dd>
+      <div class="flex-1 text-center px-4 py-5 sm:px-6 stats-divider">
+        <dt class="text-[12px] font-medium mb-1" style="color:#808088;">難易度</dt>
+        <dd class="font-bold tracking-tight" style="font-size:18px;color:#fff;letter-spacing:-0.02em;">中級 / 上級</dd>
+      </div>
+      <div class="flex-1 text-center px-4 py-5 sm:px-6 stats-divider">
+        <dt class="text-[12px] font-medium mb-1" style="color:#808088;">自動化タイプ</dt>
+        <dd class="font-bold tracking-tight" style="font-size:28px;color:#fff;letter-spacing:-0.02em;">3<span class="text-base font-semibold ml-0.5" style="color:#606068;">種</span></dd>
       </div>
     </dl>
   </div>
@@ -286,102 +321,128 @@
 
 
 <!-- ═══════════════════════════════════════
-     PORTFOLIO
+     PORTFOLIO GRID
 ═══════════════════════════════════════ -->
 <section id="portfolio" class="px-6 pb-24">
 
-  <!-- Filter -->
-  <div role="group" aria-label="フィルター" class="flex justify-center gap-2 flex-wrap mb-8">
-    <button class="filter-btn active rounded-full px-5 py-1.5 text-sm font-medium" data-filter="all">ALL</button>
-    <button class="filter-btn rounded-full px-5 py-1.5 text-sm font-medium" data-filter="mid">中級</button>
-    <button class="filter-btn rounded-full px-5 py-1.5 text-sm font-medium" data-filter="adv">上級</button>
-    <button class="filter-btn rounded-full px-5 py-1.5 text-sm font-medium" data-filter="v46">v4.6</button>
-    <button class="filter-btn rounded-full px-5 py-1.5 text-sm font-medium" data-filter="v47">v4.7</button>
+  <!-- Filter pills -->
+  <div role="group" aria-label="フィルター" class="flex flex-wrap justify-center gap-2 mb-8">
+    <button class="filter-btn active" data-filter="all">ALL</button>
+    <button class="filter-btn" data-filter="mid">中級</button>
+    <button class="filter-btn" data-filter="adv">上級</button>
+    <button class="filter-btn" data-filter="v46">v4.6</button>
+    <button class="filter-btn" data-filter="v47">v4.7</button>
+    <button class="filter-btn" data-filter="multi-agent">Multi-Agent</button>
+    <button class="filter-btn" data-filter="build">Build</button>
+    <button class="filter-btn" data-filter="browser">Browser</button>
   </div>
 
   <!-- Section label -->
-  <p class="text-center text-[11px] tracking-[.18em] uppercase mb-6"
-     style="color:rgba(20,20,24,.45);text-shadow:0 1px 4px rgba(255,255,255,.2);">実績一覧</p>
+  <p class="text-center text-[11px] font-semibold tracking-[.18em] uppercase mb-7"
+     style="color:rgba(20,20,24,.42);text-shadow:0 1px 4px rgba(255,255,255,.18);">実績一覧</p>
 
   <!-- Grid -->
   <ul id="portfolio-grid" role="list"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-[1080px] mx-auto">
 
-    <!-- Card: 上級 v4.6 -->
-    <li class="card-enter portfolio-card glass-dark rounded-2xl overflow-hidden cursor-pointer"
-        data-level="adv" data-ver="v46"
-        onclick="openLightbox(0)" tabindex="0" role="button"
-        aria-label="マルチエージェントレビューの詳細を見る"
-        onkeydown="if(event.key==='Enter')openLightbox(0)">
-      <div class="card-img-wrap" style="aspect-ratio:16/9;background:#111;">
-        <img src="img/adv-4-6.png" alt="マルチエージェントレビューのスクリーンショット"
-             class="w-full h-full object-cover object-top" loading="lazy">
+    <!-- ── Card 1: adv v4.6 multi-agent ── -->
+    <li class="card-enter portfolio-card overflow-hidden"
+        data-level="adv" data-ver="v46" data-type="multi-agent"
+        onclick="openLightbox(0)"
+        tabindex="0" role="button"
+        aria-label="マルチエージェント Builder/Reviewer パターンの詳細を見る"
+        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(0)">
+      <div class="card-img-wrap">
+        <img src="img/adv-4-6.png"
+             alt="Builder/Reviewerマルチエージェントパターンのスクリーンショット"
+             class="w-full h-full object-cover object-top"
+             loading="lazy">
       </div>
       <div class="p-5">
-        <div class="flex gap-1.5 mb-3 flex-wrap">
+        <!-- Badges row -->
+        <div class="flex flex-wrap items-center gap-1.5 mb-2">
           <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
                 style="background:rgba(124,58,237,.22);color:#c4b5fd;">上級</span>
           <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
                 style="background:rgba(255,255,255,.08);color:#808088;">v4.6</span>
+          <!-- Type chip -->
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style="background:rgba(20,184,166,.18);color:#5eead4;">Multi-Agent</span>
         </div>
-        <h3 class="text-base font-semibold mb-2" style="color:#c8c8cc;">マルチエージェントレビュー</h3>
+        <h3 class="text-base font-semibold leading-snug mb-2" style="color:#c8c8cc;">
+          マルチエージェント Builder/Reviewer パターン
+        </h3>
         <p class="text-sm leading-relaxed" style="color:#808088;">
-          Claude Codeで複数エージェントを連携させ、コードレビューを自動化したワークフロー実装。
+          BuilderエージェントがファイルをJSONスキーマに従い生成し、ReviewerエージェントがCLAUDE.mdのガイドライン準拠を検証する2フェーズ構成。自律的な品質管理を実現する。
         </p>
       </div>
     </li>
 
-    <!-- Card: 中級 v4.6 -->
-    <li class="card-enter portfolio-card glass-dark rounded-2xl overflow-hidden cursor-pointer"
-        data-level="mid" data-ver="v46"
-        onclick="openLightbox(1)" tabindex="0" role="button"
-        aria-label="ビルド＆レビュー自動化の詳細を見る"
-        onkeydown="if(event.key==='Enter')openLightbox(1)">
-      <div class="card-img-wrap" style="aspect-ratio:16/9;background:#111;">
-        <img src="img/mid-4-6.png" alt="ビルド＆レビュー自動化のスクリーンショット"
-             class="w-full h-full object-cover object-top" loading="lazy">
+    <!-- ── Card 2: mid v4.6 build ── -->
+    <li class="card-enter portfolio-card overflow-hidden"
+        data-level="mid" data-ver="v46" data-type="build"
+        onclick="openLightbox(1)"
+        tabindex="0" role="button"
+        aria-label="Sub Agent Managerによるタスク分解の詳細を見る"
+        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(1)">
+      <div class="card-img-wrap">
+        <img src="img/mid-4-6.png"
+             alt="Sub Agent Managerタスク分解ワークフローのスクリーンショット"
+             class="w-full h-full object-cover object-top"
+             loading="lazy">
       </div>
       <div class="p-5">
-        <div class="flex gap-1.5 mb-3 flex-wrap">
+        <div class="flex flex-wrap items-center gap-1.5 mb-2">
           <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
                 style="background:rgba(37,99,235,.22);color:#93c5fd;">中級</span>
           <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
                 style="background:rgba(255,255,255,.08);color:#808088;">v4.6</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style="background:rgba(245,158,11,.18);color:#fcd34d;">Build Automation</span>
         </div>
-        <h3 class="text-base font-semibold mb-2" style="color:#c8c8cc;">ビルド＆レビュー自動化</h3>
+        <h3 class="text-base font-semibold leading-snug mb-2" style="color:#c8c8cc;">
+          Sub Agent Managerによるタスク分解
+        </h3>
         <p class="text-sm leading-relaxed" style="color:#808088;">
-          AntigravityプロジェクトのビルドからレビューまでをClaude Codeで一貫して実行。
+          Antigravity（Sub Agent Manager）がCLAUDE.mdを読み込み、実行タスクを構造化リストへ分解する中級ワークフロー。サブエージェント(claude-haiku)のディスパッチまで管理する。
         </p>
       </div>
     </li>
 
-    <!-- Card: 中級 v4.7 -->
-    <li class="card-enter portfolio-card glass-dark rounded-2xl overflow-hidden cursor-pointer"
-        data-level="mid" data-ver="v47"
-        onclick="openLightbox(2)" tabindex="0" role="button"
-        aria-label="ブラウザ自動化テストの詳細を見る"
-        onkeydown="if(event.key==='Enter')openLightbox(2)">
-      <div class="card-img-wrap" style="aspect-ratio:16/9;background:#111;">
-        <img src="img/mid-4-7.png" alt="ブラウザ自動化テストのスクリーンショット"
-             class="w-full h-full object-cover object-top" loading="lazy">
+    <!-- ── Card 3: mid v4.7 browser ── -->
+    <li class="card-enter portfolio-card overflow-hidden"
+        data-level="mid" data-ver="v47" data-type="browser"
+        onclick="openLightbox(2)"
+        tabindex="0" role="button"
+        aria-label="ブラウザ自動化 WebログインE2Eテストの詳細を見る"
+        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(2)">
+      <div class="card-img-wrap">
+        <img src="img/mid-4-7.png"
+             alt="ブラウザ自動化WebログインE2EテストのスクリーンショットClaude v4.7"
+             class="w-full h-full object-cover object-top"
+             loading="lazy">
       </div>
       <div class="p-5">
-        <div class="flex gap-1.5 mb-3 flex-wrap">
+        <div class="flex flex-wrap items-center gap-1.5 mb-2">
           <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
                 style="background:rgba(37,99,235,.22);color:#93c5fd;">中級</span>
           <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
                 style="background:rgba(255,255,255,.08);color:#808088;">v4.7</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style="background:rgba(239,68,68,.18);color:#fca5a5;">Browser Testing</span>
         </div>
-        <h3 class="text-base font-semibold mb-2" style="color:#c8c8cc;">ブラウザ自動化テスト</h3>
+        <h3 class="text-base font-semibold leading-snug mb-2" style="color:#c8c8cc;">
+          ブラウザ自動化 WebログインE2Eテスト
+        </h3>
         <p class="text-sm leading-relaxed" style="color:#808088;">
-          Claude in Chromeでログインフローを自動テスト。Secure Areaへのアクセス検証を実現。
+          Claude v4.7がブラウザ操作ツールでログインフォームに認証情報を入力し、セキュアページへのアクセスをバナーテキストで自動検証する中級ワークフロー。
         </p>
       </div>
     </li>
   </ul>
 
   <!-- Empty state -->
-  <p id="empty-state" class="hidden text-center text-[#808088] py-16 text-sm">
+  <p id="empty-state" class="hidden text-center py-16 text-sm" style="color:#808088;">
     該当する実績はありません。
   </p>
 </section>
@@ -390,43 +451,46 @@
 <!-- ═══════════════════════════════════════
      ABOUT
 ═══════════════════════════════════════ -->
-<section id="about" class="px-6 pb-24">
+<section id="about" class="px-6 pb-28">
   <div class="max-w-4xl mx-auto">
 
     <div class="text-center mb-10">
-      <p class="text-[11px] tracking-[.18em] uppercase mb-3"
-         style="color:rgba(20,20,24,.45);text-shadow:0 1px 4px rgba(255,255,255,.2);">About</p>
-      <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-        Claude Codeとは
+      <p class="text-[11px] font-semibold tracking-[.18em] uppercase mb-3"
+         style="color:rgba(20,20,24,.42);text-shadow:0 1px 4px rgba(255,255,255,.18);">About</p>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+        実践的な AI 自動化
       </h2>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <!-- Card A -->
-      <div class="about-card glass-dark rounded-2xl p-6" style="box-shadow:0 8px 32px rgba(0,0,0,.28);">
-        <div class="w-10 h-10 rounded-xl mb-4 flex items-center justify-center text-xl"
-             style="background:rgba(124,58,237,.2);">🤖</div>
-        <h3 class="text-sm font-semibold mb-2" style="color:#c8c8cc;">AIエージェント</h3>
-        <p class="text-xs leading-relaxed" style="color:#808088;">
-          Anthropicが提供するCLIツール。ターミナル上でコードの生成・編集・実行をAIが自律的に担当する。
-        </p>
-      </div>
-      <!-- Card B -->
-      <div class="about-card glass-dark rounded-2xl p-6" style="box-shadow:0 8px 32px rgba(0,0,0,.28);">
-        <div class="w-10 h-10 rounded-xl mb-4 flex items-center justify-center text-xl"
-             style="background:rgba(37,99,235,.2);">⚡</div>
-        <h3 class="text-sm font-semibold mb-2" style="color:#c8c8cc;">タスク自動化</h3>
-        <p class="text-xs leading-relaxed" style="color:#808088;">
-          ファイル操作・テスト実行・デプロイまで、複数ステップのタスクを一括して自動化できる。
-        </p>
-      </div>
-      <!-- Card C -->
-      <div class="about-card glass-dark rounded-2xl p-6" style="box-shadow:0 8px 32px rgba(0,0,0,.28);">
-        <div class="w-10 h-10 rounded-xl mb-4 flex items-center justify-center text-xl"
-             style="background:rgba(20,184,166,.2);">🔗</div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+      <!-- Multi-Agent -->
+      <div class="about-card glass rounded-2xl p-6">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center text-2xl"
+             style="background:rgba(124,58,237,.22);">🤖</div>
         <h3 class="text-sm font-semibold mb-2" style="color:#c8c8cc;">マルチエージェント</h3>
         <p class="text-xs leading-relaxed" style="color:#808088;">
-          複数のエージェントを並列・直列に連携させることで、大規模なワークフローを構築できる。
+          BuilderとReviewerの2エージェントが役割を分担。Builderがファイルを生成し、ReviewerがCLAUDE.mdガイドラインへの準拠を自律検証する品質保証パターン。
+        </p>
+      </div>
+
+      <!-- タスク自動化 -->
+      <div class="about-card glass rounded-2xl p-6">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center text-2xl"
+             style="background:rgba(37,99,235,.22);">⚡</div>
+        <h3 class="text-sm font-semibold mb-2" style="color:#c8c8cc;">タスク自動化</h3>
+        <p class="text-xs leading-relaxed" style="color:#808088;">
+          Sub Agent Manager（Antigravity）がタスクを構造化リストに分解し、サブエージェント claude-haiku へのディスパッチまで管理するビルド自動化の中級ワークフロー。
+        </p>
+      </div>
+
+      <!-- ブラウザ制御 -->
+      <div class="about-card glass rounded-2xl p-6">
+        <div class="w-11 h-11 rounded-xl mb-4 flex items-center justify-center text-2xl"
+             style="background:rgba(20,184,166,.22);">🌐</div>
+        <h3 class="text-sm font-semibold mb-2" style="color:#c8c8cc;">ブラウザ制御</h3>
+        <p class="text-xs leading-relaxed" style="color:#808088;">
+          Claude v4.7のブラウザ操作ツールでログインフォームへの認証情報入力からセキュアページへのアクセス検証まで、E2Eテストを完全自動化するワークフロー。
         </p>
       </div>
     </div>
@@ -438,11 +502,12 @@
      FOOTER
 ═══════════════════════════════════════ -->
 <footer class="px-6 pb-10">
-  <div class="glass-dark-sm rounded-2xl max-w-4xl mx-auto px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"
-       style="box-shadow:0 4px 20px rgba(0,0,0,.2);">
-    <p class="text-xs font-bold tracking-[.2em] uppercase text-white">CC Portfolio</p>
-    <p class="text-xs text-[#808088]">Built with Claude Code &amp; Tailwind CSS</p>
-    <p class="text-xs text-[#808088]">&copy; 2025</p>
+  <div class="glass-sm rounded-2xl max-w-4xl mx-auto px-8 py-5
+              flex flex-col sm:flex-row items-center justify-between gap-3"
+       style="box-shadow:0 4px 20px rgba(0,0,0,.18);">
+    <p class="text-xs font-bold tracking-widest uppercase text-white">CC Portfolio</p>
+    <p class="text-xs" style="color:#808088;">Built with Claude Code &amp; Tailwind CSS</p>
+    <p class="text-xs" style="color:#808088;">&copy; 2025</p>
   </div>
 </footer>
 
@@ -451,36 +516,47 @@
      LIGHTBOX
 ═══════════════════════════════════════ -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="実績詳細"
-     class="hidden fixed inset-0 z-[9999] flex items-center justify-center p-4"
-     style="background:rgba(0,0,0,.78);backdrop-filter:blur(10px);">
+     class="hidden fixed inset-0 z-[9999] flex items-center justify-center p-6"
+     style="background:rgba(0,0,0,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
 
-  <!-- Close backdrop -->
-  <button class="absolute inset-0 w-full h-full cursor-default" onclick="closeLightbox()" aria-label="閉じる"></button>
+  <!-- Backdrop close -->
+  <button class="absolute inset-0 w-full h-full cursor-default" onclick="closeLightbox()"
+          aria-label="ライトボックスを閉じる" tabindex="-1"></button>
 
-  <!-- Content -->
-  <div class="relative z-10 flex flex-col items-center gap-5 max-w-[90vw]">
-    <!-- Nav arrows -->
+  <!-- Main content -->
+  <div class="relative z-10 flex flex-col items-center gap-5" style="max-width:88vw;">
+
+    <!-- Prev arrow -->
     <button onclick="prevItem()" aria-label="前の実績"
-            class="absolute left-[-3rem] sm:left-[-4rem] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-[#c8c8cc] hover:text-white transition-colors"
-            style="background:rgba(30,30,34,.85);backdrop-filter:blur(12px);">
+            class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-14 w-11 h-11
+                   rounded-full flex items-center justify-center transition-colors
+                   hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+            style="background:rgba(30,30,34,.85);backdrop-filter:blur(12px);color:#c8c8cc;">
       &#8592;
     </button>
+
+    <!-- Next arrow -->
     <button onclick="nextItem()" aria-label="次の実績"
-            class="absolute right-[-3rem] sm:right-[-4rem] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-[#c8c8cc] hover:text-white transition-colors"
-            style="background:rgba(30,30,34,.85);backdrop-filter:blur(12px);">
+            class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-14 w-11 h-11
+                   rounded-full flex items-center justify-center transition-colors
+                   hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+            style="background:rgba(30,30,34,.85);backdrop-filter:blur(12px);color:#c8c8cc;">
       &#8594;
     </button>
 
-    <img id="lb-img" src="" alt="" class="max-h-[72vh] max-w-full rounded-2xl"
-         style="box-shadow:0 24px 80px rgba(0,0,0,.65);">
+    <!-- Image -->
+    <img id="lb-img" src="" alt=""
+         class="rounded-2xl object-contain"
+         style="max-width:88vw;max-height:72vh;box-shadow:0 24px 80px rgba(0,0,0,.65);">
 
     <!-- Info pill -->
-    <div class="rounded-full px-7 py-3 text-center" style="background:rgba(30,30,34,.90);backdrop-filter:blur(16px);box-shadow:0 4px 24px rgba(0,0,0,.3);">
-      <div class="flex items-center gap-3 justify-center">
-        <div id="lb-badges" class="flex gap-1.5"></div>
+    <div class="rounded-full px-7 py-3 text-center"
+         style="background:rgba(30,30,34,.92);backdrop-filter:blur(16px);box-shadow:0 4px 24px rgba(0,0,0,.32);max-width:min(640px,86vw);">
+      <div class="flex flex-wrap items-center gap-2 justify-center mb-1">
+        <div id="lb-badges" class="flex flex-wrap gap-1.5 justify-center"></div>
         <h3 id="lb-title" class="text-sm font-semibold" style="color:#c8c8cc;"></h3>
       </div>
-      <p id="lb-desc" class="text-xs mt-1" style="color:#808088;"></p>
+      <p id="lb-desc" class="text-xs leading-relaxed" style="color:#808088;"></p>
     </div>
 
     <!-- Counter -->
@@ -489,8 +565,9 @@
 
   <!-- Close button -->
   <button onclick="closeLightbox()" aria-label="閉じる"
-          class="fixed top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-[#c8c8cc] hover:text-white transition-colors"
-          style="background:rgba(30,30,34,.85);backdrop-filter:blur(12px);">
+          class="fixed top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center
+                 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-white"
+          style="background:rgba(30,30,34,.85);backdrop-filter:blur(12px);color:#c8c8cc;">
     &#10005;
   </button>
 </div>
@@ -503,64 +580,74 @@
 /* ── PORTFOLIO DATA ── */
 const ITEMS = [
   {
-    src: 'img/adv-4-6.png',
-    title: 'マルチエージェントレビュー',
-    desc: 'Claude Codeで複数エージェントを連携させ、コードレビューを自動化したワークフロー実装。',
-    level: 'adv', ver: 'v46',
+    src:   'img/adv-4-6.png',
+    title: 'マルチエージェント Builder/Reviewer パターン',
+    desc:  'BuilderエージェントがファイルをJSONスキーマに従い生成し、ReviewerエージェントがCLAUDE.mdのガイドライン準拠を検証する2フェーズ構成。自律的な品質管理を実現する。',
+    level: 'adv',
+    ver:   'v46',
+    type:  'multi-agent',
     badges: [
-      { label:'上級', style:'background:rgba(124,58,237,.22);color:#c4b5fd;' },
-      { label:'v4.6', style:'background:rgba(255,255,255,.08);color:#808088;' },
+      { label: '上級',        style: 'background:rgba(124,58,237,.22);color:#c4b5fd;' },
+      { label: 'v4.6',        style: 'background:rgba(255,255,255,.08);color:#808088;' },
+      { label: 'Multi-Agent', style: 'background:rgba(20,184,166,.18);color:#5eead4;font-size:10px;' },
     ]
   },
   {
-    src: 'img/mid-4-6.png',
-    title: 'ビルド＆レビュー自動化',
-    desc: 'AntigravityプロジェクトのビルドからレビューまでをClaude Codeで一貫して実行。',
-    level: 'mid', ver: 'v46',
+    src:   'img/mid-4-6.png',
+    title: 'Sub Agent Managerによるタスク分解',
+    desc:  'Antigravity（Sub Agent Manager）がCLAUDE.mdを読み込み、実行タスクを構造化リストへ分解する中級ワークフロー。サブエージェント(claude-haiku)のディスパッチまで管理する。',
+    level: 'mid',
+    ver:   'v46',
+    type:  'build',
     badges: [
-      { label:'中級', style:'background:rgba(37,99,235,.22);color:#93c5fd;' },
-      { label:'v4.6', style:'background:rgba(255,255,255,.08);color:#808088;' },
+      { label: '中級',             style: 'background:rgba(37,99,235,.22);color:#93c5fd;' },
+      { label: 'v4.6',             style: 'background:rgba(255,255,255,.08);color:#808088;' },
+      { label: 'Build Automation', style: 'background:rgba(245,158,11,.18);color:#fcd34d;font-size:10px;' },
     ]
   },
   {
-    src: 'img/mid-4-7.png',
-    title: 'ブラウザ自動化テスト',
-    desc: 'Claude in Chromeでログインフローを自動テスト。Secure Areaへのアクセス検証を実現。',
-    level: 'mid', ver: 'v47',
+    src:   'img/mid-4-7.png',
+    title: 'ブラウザ自動化 WebログインE2Eテスト',
+    desc:  'Claude v4.7がブラウザ操作ツールでログインフォームに認証情報を入力し、セキュアページへのアクセスをバナーテキストで自動検証する中級ワークフロー。',
+    level: 'mid',
+    ver:   'v47',
+    type:  'browser',
     badges: [
-      { label:'中級', style:'background:rgba(37,99,235,.22);color:#93c5fd;' },
-      { label:'v4.7', style:'background:rgba(255,255,255,.08);color:#808088;' },
+      { label: '中級',            style: 'background:rgba(37,99,235,.22);color:#93c5fd;' },
+      { label: 'v4.7',            style: 'background:rgba(255,255,255,.08);color:#808088;' },
+      { label: 'Browser Testing', style: 'background:rgba(239,68,68,.18);color:#fca5a5;font-size:10px;' },
     ]
   },
 ];
+
 let currentIndex = 0;
 
-/* ── NAV SCROLL ── */
+/* ── 1. NAV SCROLL EFFECT ── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-/* ── MOBILE MENU ── */
+/* ── 2. MOBILE MENU TOGGLE ── */
 const menuToggle   = document.getElementById('menu-toggle');
 const mobileMenu   = document.getElementById('mobile-menu');
 const menuClose    = document.getElementById('menu-close');
 const menuBackdrop = document.getElementById('menu-backdrop');
 const iconOpen     = document.getElementById('icon-open');
-const iconClose    = document.getElementById('icon-close');
+const iconClose_el = document.getElementById('icon-close');
 
 function openMenu() {
   mobileMenu.classList.remove('hidden-menu');
   menuBackdrop.classList.remove('hidden');
   iconOpen.classList.add('hidden');
-  iconClose.classList.remove('hidden');
+  iconClose_el.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
 function closeMenu() {
   mobileMenu.classList.add('hidden-menu');
   menuBackdrop.classList.add('hidden');
   iconOpen.classList.remove('hidden');
-  iconClose.classList.add('hidden');
+  iconClose_el.classList.add('hidden');
   document.body.style.overflow = '';
 }
 menuToggle.addEventListener('click', openMenu);
@@ -568,73 +655,89 @@ menuClose.addEventListener('click', closeMenu);
 menuBackdrop.addEventListener('click', closeMenu);
 mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-/* ── CARD SCROLL ANIMATION ── */
-const cards = document.querySelectorAll('.card-enter');
-const cardObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry, _) => {
-    if (entry.isIntersecting) {
-      const delay = Array.from(cards).indexOf(entry.target) * 80;
-      setTimeout(() => entry.target.classList.add('visible'), delay);
-      cardObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15 });
-cards.forEach(c => cardObserver.observe(c));
+/* ── 3. FILTER BUTTONS ── */
+const filterBtns = document.querySelectorAll('.filter-btn');
+const portfolioGrid = document.getElementById('portfolio-grid');
+const emptyState = document.getElementById('empty-state');
+const gridCards = Array.from(portfolioGrid.querySelectorAll('li'));
 
-/* ── FILTER ── */
-document.querySelectorAll('.filter-btn').forEach(btn => {
+filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const f = btn.dataset.filter;
-    const grid = document.getElementById('portfolio-grid');
     let visible = 0;
-    grid.querySelectorAll('li').forEach(card => {
-      const show = f === 'all' || card.dataset.level === f || card.dataset.ver === f;
+    gridCards.forEach(card => {
+      const show = f === 'all'
+        || card.dataset.level === f
+        || card.dataset.ver === f
+        || card.dataset.type === f;
       card.style.display = show ? '' : 'none';
       if (show) visible++;
     });
-    document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
+    emptyState.classList.toggle('hidden', visible > 0);
   });
 });
 
-/* ── LIGHTBOX ── */
+/* ── 4. CARD SCROLL ANIMATION (IntersectionObserver) ── */
+const animCards = document.querySelectorAll('.card-enter');
+const cardObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = Array.from(animCards).indexOf(entry.target);
+      setTimeout(() => entry.target.classList.add('visible'), idx * 80);
+      cardObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+animCards.forEach(c => cardObserver.observe(c));
+
+/* ── 5. LIGHTBOX ── */
+function renderLightbox() {
+  const item = ITEMS[currentIndex];
+  const img = document.getElementById('lb-img');
+  img.src = item.src;
+  img.alt = item.title;
+  document.getElementById('lb-title').textContent = item.title;
+  document.getElementById('lb-desc').textContent  = item.desc;
+  document.getElementById('lb-counter').textContent = `${currentIndex + 1} / ${ITEMS.length}`;
+  document.getElementById('lb-badges').innerHTML = item.badges.map(b =>
+    `<span style="display:inline-block;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;${b.style}">${b.label}</span>`
+  ).join('');
+}
+
 function openLightbox(index) {
   currentIndex = index;
   renderLightbox();
-  document.getElementById('lightbox').classList.remove('hidden');
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  // Focus trap: focus close btn
+  lb.querySelector('button[aria-label="閉じる"]').focus();
 }
+
 function closeLightbox() {
   document.getElementById('lightbox').classList.add('hidden');
   document.body.style.overflow = '';
 }
+
 function prevItem() {
   currentIndex = (currentIndex - 1 + ITEMS.length) % ITEMS.length;
   renderLightbox();
 }
+
 function nextItem() {
   currentIndex = (currentIndex + 1) % ITEMS.length;
   renderLightbox();
 }
-function renderLightbox() {
-  const item = ITEMS[currentIndex];
-  document.getElementById('lb-img').src   = item.src;
-  document.getElementById('lb-img').alt   = item.title;
-  document.getElementById('lb-title').textContent = item.title;
-  document.getElementById('lb-desc').textContent  = item.desc;
-  document.getElementById('lb-counter').textContent = `${currentIndex+1} / ${ITEMS.length}`;
-  const badgesEl = document.getElementById('lb-badges');
-  badgesEl.innerHTML = item.badges.map(b =>
-    `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full" style="${b.style}">${b.label}</span>`
-  ).join('');
-}
+
+/* Keyboard navigation */
 document.addEventListener('keydown', e => {
   const lb = document.getElementById('lightbox');
   if (lb.classList.contains('hidden')) return;
-  if (e.key === 'Escape')     closeLightbox();
-  if (e.key === 'ArrowLeft')  prevItem();
-  if (e.key === 'ArrowRight') nextItem();
+  if (e.key === 'Escape')     { e.preventDefault(); closeLightbox(); }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); prevItem(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); nextItem(); }
 });
 </script>
 </body>
