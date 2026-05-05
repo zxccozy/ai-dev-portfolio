@@ -9,6 +9,8 @@
 <meta property="og:description" content="Claude Codeを使ったAI開発タスクの実績集。マルチエージェント協調、コードベース自動分析、ブラウザ自動化テストなど実践事例を公開。">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#e03010">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; frame-ancestors 'self';">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ── RESET & BASE ── */
@@ -386,10 +388,9 @@ body {
 
     <!-- Card 1: 上級 v4.6 Multi-Agent -->
     <li class="portfolio-card"
-        data-level="adv" data-ver="v46" data-type="multi-agent"
-        onclick="openLightbox(0)" tabindex="0" role="button"
-        aria-label="マルチエージェント協調レビューの詳細を見る"
-        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(0)">
+        data-level="adv" data-ver="v46" data-type="multi-agent" data-index="0"
+        tabindex="0" role="button"
+        aria-label="マルチエージェント協調レビューの詳細を見る">
       <div class="card-img-wrap">
         <img src="img/adv-4-6.png" alt="Claude CodeによるマルチエージェントBuilder/Reviewerパターンのスクリーンショット" loading="lazy">
       </div>
@@ -408,10 +409,9 @@ body {
 
     <!-- Card 2: 中級 v4.6 Build -->
     <li class="portfolio-card"
-        data-level="mid" data-ver="v46" data-type="build"
-        onclick="openLightbox(1)" tabindex="0" role="button"
-        aria-label="コードベース自動分析・要約の詳細を見る"
-        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(1)">
+        data-level="mid" data-ver="v46" data-type="build" data-index="1"
+        tabindex="0" role="button"
+        aria-label="コードベース自動分析・要約の詳細を見る">
       <div class="card-img-wrap">
         <img src="img/mid-4-6.png" alt="AntigravityエージェントによるSKILL.md読み込みと自動分析のスクリーンショット" loading="lazy">
       </div>
@@ -430,10 +430,9 @@ body {
 
     <!-- Card 3: 中級 v4.7 Browser -->
     <li class="portfolio-card"
-        data-level="mid" data-ver="v47" data-type="browser"
-        onclick="openLightbox(2)" tabindex="0" role="button"
-        aria-label="Seleniumログイン自動テストの詳細を見る"
-        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(2)">
+        data-level="mid" data-ver="v47" data-type="browser" data-index="2"
+        tabindex="0" role="button"
+        aria-label="Seleniumログイン自動テストの詳細を見る">
       <div class="card-img-wrap">
         <img src="img/mid-4-7.png" alt="Claude Code v4.7によるSeleniumを使ったWebログイン自動テストのスクリーンショット" loading="lazy">
       </div>
@@ -509,12 +508,12 @@ body {
 
 <!-- ═══════════ LIGHTBOX (complete) ═══════════ -->
 <div id="lightbox" class="lightbox-overlay" role="dialog" aria-modal="true" aria-labelledby="lb-title">
-  <button class="lb-close" onclick="closeLightbox()" aria-label="閉じる">&#10005;</button>
+  <button id="lb-close-btn" class="lb-close" aria-label="閉じる">&#10005;</button>
 
   <div class="lb-nav-wrap">
-    <button class="lb-arrow prev" onclick="prevItem()" aria-label="前の実績">&#8592;</button>
+    <button id="lb-prev-btn" class="lb-arrow prev" aria-label="前の実績">&#8592;</button>
     <img id="lb-img" src="" alt="" class="block">
-    <button class="lb-arrow next" onclick="nextItem()" aria-label="次の実績">&#8594;</button>
+    <button id="lb-next-btn" class="lb-arrow next" aria-label="次の実績">&#8594;</button>
   </div>
 
   <div class="lb-info">
@@ -526,146 +525,11 @@ body {
   <p id="lb-counter" class="lb-counter"></p>
 
   <!-- Backdrop close -->
-  <div class="absolute inset-0 -z-10" onclick="closeLightbox()" aria-hidden="true"></div>
+  <div id="lb-backdrop" class="absolute inset-0 -z-10" aria-hidden="true"></div>
 </div>
 
 
-<script>
-/* ── DATA ── */
-const ITEMS = [
-  {
-    src: 'img/adv-4-6.png',
-    title: 'マルチエージェント協調レビュー',
-    desc: '親エージェントが複数サブエージェントを統括し、ビルドとレビューを自動化する高度なワークフロー。',
-    level: 'adv', ver: 'v4.6', type: 'Multi-Agent',
-    badges: [
-      { cls:'badge-adv', label:'上級' },
-      { cls:'badge-ver', label:'v4.6' },
-      { cls:'chip-multi', label:'Multi-Agent' }
-    ]
-  },
-  {
-    src: 'img/mid-4-6.png',
-    title: 'コードベース自動分析・要約',
-    desc: 'AntigravityエージェントがSKILL.mdを読み込み、コードベースを解析して構造化された日本語サマリーを自動生成。',
-    level: 'mid', ver: 'v4.6', type: 'Build-Automation',
-    badges: [
-      { cls:'badge-mid', label:'中級' },
-      { cls:'badge-ver', label:'v4.6' },
-      { cls:'chip-build', label:'Build-Automation' }
-    ]
-  },
-  {
-    src: 'img/mid-4-7.png',
-    title: 'Seleniumログイン自動テスト',
-    desc: 'Claude v4.7がSeleniumを操作しWebアプリへの自動ログインとセキュアエリアへのアクセスを検証。',
-    level: 'mid', ver: 'v4.7', type: 'Browser-Testing',
-    badges: [
-      { cls:'badge-mid', label:'中級' },
-      { cls:'badge-ver', label:'v4.7' },
-      { cls:'chip-browser', label:'Browser-Testing' }
-    ]
-  }
-];
-let currentIdx = 0;
+<script src="script.js" defer></script>
 
-/* ── NAV SCROLL ── */
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-}, { passive: true });
-
-/* ── MOBILE MENU ── */
-const mobileMenu   = document.getElementById('mobile-menu');
-const menuBackdrop = document.getElementById('menu-backdrop');
-const iconOpen     = document.getElementById('icon-open');
-const iconClose    = document.getElementById('icon-close');
-
-const menuToggleBtn = document.getElementById('menu-toggle');
-function openMenu() {
-  mobileMenu.classList.add('open');
-  menuBackdrop.classList.remove('hidden');
-  iconOpen.classList.add('hidden');
-  iconClose.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  menuToggleBtn.setAttribute('aria-expanded', 'true');
-}
-function closeMenu() {
-  mobileMenu.classList.remove('open');
-  menuBackdrop.classList.add('hidden');
-  iconOpen.classList.remove('hidden');
-  iconClose.classList.add('hidden');
-  document.body.style.overflow = '';
-  menuToggleBtn.setAttribute('aria-expanded', 'false');
-}
-menuToggleBtn.addEventListener('click', openMenu);
-document.getElementById('menu-close').addEventListener('click', closeMenu);
-menuBackdrop.addEventListener('click', closeMenu);
-mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-
-/* ── FILTER ── */
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const f = btn.dataset.filter;
-    let visible = 0;
-    document.querySelectorAll('#portfolio-grid li').forEach(card => {
-      const show = f === 'all'
-        || card.dataset.level === f
-        || card.dataset.ver  === f
-        || card.dataset.type === f;
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
-    });
-    document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
-  });
-});
-
-/* ── CARD SCROLL ANIMATION ── */
-const cards = document.querySelectorAll('.portfolio-card');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const idx = [...cards].indexOf(entry.target);
-    setTimeout(() => entry.target.classList.add('visible'), idx * 80);
-    observer.unobserve(entry.target);
-  });
-}, { threshold: 0.12 });
-cards.forEach(c => observer.observe(c));
-
-/* ── LIGHTBOX ── */
-function renderLightbox() {
-  const item = ITEMS[currentIdx];
-  document.getElementById('lb-img').src = item.src;
-  document.getElementById('lb-img').alt = item.title;
-  document.getElementById('lb-title').textContent = item.title;
-  document.getElementById('lb-desc').textContent  = item.desc;
-  document.getElementById('lb-counter').textContent = `${currentIdx + 1} / ${ITEMS.length}`;
-  document.getElementById('lb-badges').innerHTML = item.badges
-    .map(b => `<span class="${b.cls}">${b.label}</span>`).join('');
-}
-function openLightbox(idx) {
-  currentIdx = idx;
-  renderLightbox();
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  document.querySelector('.lb-close').focus();
-}
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function prevItem() { currentIdx = (currentIdx - 1 + ITEMS.length) % ITEMS.length; renderLightbox(); }
-function nextItem() { currentIdx = (currentIdx + 1) % ITEMS.length; renderLightbox(); }
-
-document.addEventListener('keydown', e => {
-  const lb = document.getElementById('lightbox');
-  if (!lb.classList.contains('open')) return;
-  if (e.key === 'Escape')     { e.preventDefault(); closeLightbox(); }
-  if (e.key === 'ArrowLeft')  { e.preventDefault(); prevItem(); }
-  if (e.key === 'ArrowRight') { e.preventDefault(); nextItem(); }
-});
-</script>
 </body>
 </html>
