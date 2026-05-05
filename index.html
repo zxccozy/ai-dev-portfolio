@@ -9,6 +9,8 @@
 <meta property="og:description" content="Claude Codeを使ったAI開発タスクの実績集。マルチエージェント協調、コードベース自動分析、ブラウザ自動化テストなど実践事例を公開。">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#e03010">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; frame-ancestors 'self';">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ── RESET & BASE ── */
@@ -386,10 +388,9 @@ body {
 
     <!-- Card 1: 上級 v4.6 Multi-Agent -->
     <li class="portfolio-card"
-        data-level="adv" data-ver="v46" data-type="multi-agent"
-        onclick="openLightbox(0)" tabindex="0" role="button"
-        aria-label="マルチエージェント協調レビューの詳細を見る"
-        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(0)">
+        data-level="adv" data-ver="v46" data-type="multi-agent" data-index="0"
+        tabindex="0" role="button"
+        aria-label="マルチエージェント協調レビューの詳細を見る">
       <div class="card-img-wrap">
         <img src="img/adv-4-6.png" alt="Claude CodeによるマルチエージェントBuilder/Reviewerパターンのスクリーンショット" loading="lazy">
       </div>
@@ -408,10 +409,9 @@ body {
 
     <!-- Card 2: 中級 v4.6 Build -->
     <li class="portfolio-card"
-        data-level="mid" data-ver="v46" data-type="build"
-        onclick="openLightbox(1)" tabindex="0" role="button"
-        aria-label="コードベース自動分析・要約の詳細を見る"
-        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(1)">
+        data-level="mid" data-ver="v46" data-type="build" data-index="1"
+        tabindex="0" role="button"
+        aria-label="コードベース自動分析・要約の詳細を見る">
       <div class="card-img-wrap">
         <img src="img/mid-4-6.png" alt="AntigravityエージェントによるSKILL.md読み込みと自動分析のスクリーンショット" loading="lazy">
       </div>
@@ -430,10 +430,9 @@ body {
 
     <!-- Card 3: 中級 v4.7 Browser -->
     <li class="portfolio-card"
-        data-level="mid" data-ver="v47" data-type="browser"
-        onclick="openLightbox(2)" tabindex="0" role="button"
-        aria-label="Seleniumログイン自動テストの詳細を見る"
-        onkeydown="if(event.key==='Enter'||event.key===' ')openLightbox(2)">
+        data-level="mid" data-ver="v47" data-type="browser" data-index="2"
+        tabindex="0" role="button"
+        aria-label="Seleniumログイン自動テストの詳細を見る">
       <div class="card-img-wrap">
         <img src="img/mid-4-7.png" alt="Claude Code v4.7によるSeleniumを使ったWebログイン自動テストのスクリーンショット" loading="lazy">
       </div>
@@ -509,12 +508,12 @@ body {
 
 <!-- ═══════════ LIGHTBOX (complete) ═══════════ -->
 <div id="lightbox" class="lightbox-overlay" role="dialog" aria-modal="true" aria-labelledby="lb-title">
-  <button class="lb-close" onclick="closeLightbox()" aria-label="閉じる">&#10005;</button>
+  <button id="lb-close-btn" class="lb-close" aria-label="閉じる">&#10005;</button>
 
   <div class="lb-nav-wrap">
-    <button class="lb-arrow prev" onclick="prevItem()" aria-label="前の実績">&#8592;</button>
+    <button id="lb-prev-btn" class="lb-arrow prev" aria-label="前の実績">&#8592;</button>
     <img id="lb-img" src="" alt="" class="block">
-    <button class="lb-arrow next" onclick="nextItem()" aria-label="次の実績">&#8594;</button>
+    <button id="lb-next-btn" class="lb-arrow next" aria-label="次の実績">&#8594;</button>
   </div>
 
   <div class="lb-info">
@@ -526,7 +525,7 @@ body {
   <p id="lb-counter" class="lb-counter"></p>
 
   <!-- Backdrop close -->
-  <div class="absolute inset-0 -z-10" onclick="closeLightbox()" aria-hidden="true"></div>
+  <div id="lb-backdrop" class="absolute inset-0 -z-10" aria-hidden="true"></div>
 </div>
 
 
@@ -642,8 +641,15 @@ function renderLightbox() {
   document.getElementById('lb-title').textContent = item.title;
   document.getElementById('lb-desc').textContent  = item.desc;
   document.getElementById('lb-counter').textContent = `${currentIdx + 1} / ${ITEMS.length}`;
-  document.getElementById('lb-badges').innerHTML = item.badges
-    .map(b => `<span class="${b.cls}">${b.label}</span>`).join('');
+  /* ② innerHTML → DOM API (XSS latent risk 排除) */
+  const badgesEl = document.getElementById('lb-badges');
+  badgesEl.textContent = '';
+  item.badges.forEach(b => {
+    const span = document.createElement('span');
+    span.className = b.cls;
+    span.textContent = b.label;
+    badgesEl.appendChild(span);
+  });
 }
 function openLightbox(idx) {
   currentIdx = idx;
@@ -666,6 +672,29 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  { e.preventDefault(); prevItem(); }
   if (e.key === 'ArrowRight') { e.preventDefault(); nextItem(); }
 });
+
+/* ② inline onclick/onkeydown を addEventListener に移行 (CSP unsafe-inline 依存削減) */
+/* カード: イベント委譲 */
+const grid = document.getElementById('portfolio-grid');
+grid.addEventListener('click', e => {
+  const card = e.target.closest('.portfolio-card');
+  if (!card) return;
+  openLightbox(parseInt(card.dataset.index, 10));
+});
+grid.addEventListener('keydown', e => {
+  const card = e.target.closest('.portfolio-card');
+  if (!card) return;
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openLightbox(parseInt(card.dataset.index, 10));
+  }
+});
+
+/* ライトボックスボタン */
+document.getElementById('lb-close-btn').addEventListener('click', closeLightbox);
+document.getElementById('lb-prev-btn').addEventListener('click', prevItem);
+document.getElementById('lb-next-btn').addEventListener('click', nextItem);
+document.getElementById('lb-backdrop').addEventListener('click', closeLightbox);
 </script>
 </body>
 </html>
